@@ -136,7 +136,7 @@ while True:
   ```python
   from time import sleep
   while True:
-    if api.isNewCycle:
+    if api.isNewCycle():
       code to be run every cycle
     sleep(.01)
   ```
