@@ -29,16 +29,16 @@ while True:
 ```
 ## Documentation
 - `api=travelerApi(token, openBrowser=False, printInitialize=True)`
-  - token is your acount token.
-  - openBrowser is defaulted to False but I would recommend setting it to True when testing.
-  - printInitialize is whether or not to print API initialized when the api is set up.
+  - Token is your acount token.
+  - OpenBrowser is defaulted to False but I would recommend setting it to True when testing.
+  - PrintInitialize is whether or not to print API initialized when the api is set up.
 - `api.stop()`
-  - this will close all browsing context from firefox and delete your account token. Always use this to stop your bot.
+  - This will close all browsing context from firefox and delete your account token. Always use this to stop your bot.
 - `api.move(dir)`
   - dir is the direction you would like to move.
   - Valid directions are n ,ne ,e ,se ,s ,sw ,w ,nw.
 - `api.doubleStep()`
-  - will click the double step button once.
+  - Will click the double step button once.
 - `api.equip(itemID)`
   - itemID is the id of the item you would like to equip.
   - This lets you equip anything.
