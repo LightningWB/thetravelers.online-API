@@ -141,7 +141,7 @@ while True:
     sleep(.01)
   ```
 - `api.executeRawJS(js)`
-  - Executes raw java script so if my API missed something you cna use javascript.
+  - Executes raw java script so if my API missed something you can use javascript.
 - `api.returnJS(js)`
   - Same as executeRawJS except it can use return values.
   - Ex. 
