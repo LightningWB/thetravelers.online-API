@@ -1,5 +1,5 @@
 class travelerApi():
-    def __init__(self, token,openBrowser=False, printInitialize=True):# recommende to operate not in headless for testing
+    def __init__(self, token:str, captchaToken:str, openBrowser=False, printInitialize=True):# recommende to operate not in headless for testing
         from selenium import webdriver
         from time import sleep
         options=webdriver.FirefoxOptions()
@@ -8,6 +8,7 @@ class travelerApi():
         self.driver=webdriver.Firefox(options=options)
         self.driver.get('https://thetravelers.online')
         self.driver.add_cookie({"name":"T","domain":"thetravelers.online","value":token})# logs in without password
+        self.driver.execute_script(f'SOCKET.captcha="{captchaToken}"')
         self.driver.execute_script('SOCKET.autologBtn()')
         sleep(3)# logging in takes about a second but 3 to be safe
         self.prevCycle=self.driver.execute_script('return TIME.turn')
