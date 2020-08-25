@@ -10,12 +10,25 @@ pip install thetravelers.online-Api
 2. Download install the latest version of Firefox Here:https://www.mozilla.org/en-US/firefox/new/
 3. Download Geckodriver from:https://github.com/mozilla/geckodriver/releases
 4. Place geckodriver.exe with your python instalation. <br> (Either C:\Users\your_user\AppData\Local\Programs\Python\Python38 or C:\Python38)
+## Account Token
+1. Go to https://thetravelers.online and login.
+2. In firefox press shift+f9 to open up storage.
+3. Scroll until you see a cookie named T.
+4. The value is your account token.
+## Captcha Token
+1. To get your captcha token go to the https://thetravelers.online.
+2. Complete the captcha and don't log in.
+3. Paste this into the browser console.
+```js
+prompt("Copy the captcha:", SOCKET.captcha);
+```
 ## Examples
 Example auto xp program:
 ```python
 token=input('token:')
+captchaToken=input('captcha token:')
 import travelersApi
-api=travelersApi.travelerApi(token, openBrowser=True)
+api=travelersApi.travelerApi(token, captchaToken, openBrowser=True)
 import time
 turn='e'
 while True:
@@ -28,8 +41,9 @@ while True:
     time.sleep(.1)
 ```
 ## Documentation
-- `api=travelerApi(token, openBrowser=False, printInitialize=True)`
+- `api=travelerApi(token, captchaToken, openBrowser=False, printInitialize=True)`
   - Token is your acount token.
+  - captchaToken is your captcha token.
   - OpenBrowser is defaulted to False but I would recommend setting it to True when testing.
   - PrintInitialize is whether or not to print API initialized when the api is set up.
 - `api.stop()`
