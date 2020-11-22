@@ -9,7 +9,7 @@ pip install thetravelers.online-Api
 ```
 2. Download install the latest version of Firefox Here:https://www.mozilla.org/en-US/firefox/new/
 3. Download Geckodriver from:https://github.com/mozilla/geckodriver/releases
-4. Place geckodriver.exe with your python instalation. <br> (Either C:\Users\your_user\AppData\Local\Programs\Python\Python38 or C:\Python38)
+4. Place geckodriver.exe with your python instalation or anywhere else in your path. <br> (Either C:\Users\your_user\AppData\Local\Programs\Python\Python38 or C:\Python38)
 ## Account Token
 1. Go to https://thetravelers.online and login.
 2. In firefox press shift+f9 to open up storage.
@@ -41,6 +41,12 @@ while True:
     time.sleep(.1)
 ```
 ## Documentation
+- `generateTileAt(x, y)`
+	- This will generate a tile at a specific location.
+- `getPerlin(x, y, s=100)`
+	- This gets the noise value at a given location.
+- `isTileEvent(x, y)`
+	- Returns a boolean for if the given tile is an event or not.
 - `api=travelerApi(token, captchaToken, openBrowser=False, printInitialize=True)`
   - Token is your acount token.
   - captchaToken is your captcha token.
@@ -133,7 +139,7 @@ while True:
   - Only shows client side generation.
 - `api.getTileMap()`
   - Returns a list with each tile in view distance.
-- `api.getLocalTile(x,y)
+- `api.getLocalTile(x,y)`
   - Top left is 1,1 and bottom right is 31,31.
   - Returns a tile within view distance.
   - Can show server side locations.
@@ -163,3 +169,5 @@ while True:
   >>> print(api.returnJS('YOU.username')
   (your username)
   ```
+- `api.sendPacket(packet)`
+  - Sends a packet to the server.
