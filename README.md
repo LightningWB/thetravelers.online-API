@@ -23,7 +23,7 @@ pip install thetravelers.online-Api
 prompt("Copy the captcha:", SOCKET.captcha);
 ```
 ## Examples
-Example auto xp program:
+Example auto xp program using a high level client:
 ```python
 token=input('token:')
 captchaToken=input('captcha token:')
@@ -32,13 +32,49 @@ api=travelersApi.travelerApi(token, captchaToken, openBrowser=True)
 import time
 turn='e'
 while True:
-    if(api.isNewCycle()==True):
-        api.move(turn)
-        if turn=='e':
-            turn='w'
-        else:
-            turn='e'
-    time.sleep(.1)
+	if(api.isNewCycle()==True):
+		api.move(turn)
+		if turn=='e':
+			turn='w'
+		else:
+			turn='e'
+	time.sleep(.1)
+```
+Example auto xp program using a base client:
+```python
+token=input('token:')
+captchaToken=input('captcha token:')
+import travelersApi
+traveler=travelersApi.baseClient(token)
+turn='e'
+def onMessage(msg:travelersApi.gameObject):
+	global traveler, turn
+	print(msg)
+	traveler.send({'action':'setDir', 'dir':turn, 'autowalk': True})
+	if turn=='e':
+	    turn='w'
+	else:
+	    turn='e'
+traveler.onMessage=onMessage
+traveler.login(captchaToken)
+```
+or
+```python
+import travelersApi
+token=input('token:')
+turn='e'
+class bot(travelersApi.baseClient):
+	def onMessage(self, msg:travelersApi.gameObject):
+		global turn
+		print(msg)
+		traveler.send({'action':'setDir', 'dir':turn, 'autowalk': True})
+		if turn=='e':
+		    turn='w'
+		else:
+		    turn='e'
+
+traveler = bot(token)
+traveler.login(input('captcha:'))
 ```
 ## Documentation
 - `generateTileAt(x, y)`
@@ -47,127 +83,152 @@ while True:
 	- This gets the noise value at a given location.
 - `isTileEvent(x, y)`
 	- Returns a boolean for if the given tile is an event or not.
+- `traveler=baseClient(token)`
+  - token is your account token.
+  ### methods
+  - `send(packet)`
+	- packet is the message sent to the server
+	- An action must be specified
+	- Ex. 
+    ```python
+    traveler.send({'action':'setDir', 'dir':'n', 'autowalk':False})
+    ```
+  - `onMessage(gameObject)`
+    - The method to handle any request from the server
+    - Please look at the above example to specify the type
+  - `onUpdateImmediate(message)`
+    - Gets called when the server sends an event during the cycle
+  - `onEvalJS(js)`
+    - Gets called when the server sends java script to evaluate. This has been previously sent for the exploding spire popups.
+  - `error(err)`
+    - Gets called when an error occurs.
+  - `stop()`
+    - Stops the bot
+  - `login(captcha)`
+    - Connects to the travelers.
+	- If this is never called you will never connect.
 - `api=travelerApi(token, captchaToken, openBrowser=False, printInitialize=True)`
-  - Token is your acount token.
+  - Token is your account token.
   - captchaToken is your captcha token.
   - OpenBrowser is defaulted to False but I would recommend setting it to True when testing.
   - PrintInitialize is whether or not to print API initialized when the api is set up.
-- `api.stop()`
-  - This will close all browsing context from firefox and delete your account token. Always use this to stop your bot.
-- `api.move(dir)`
-  - dir is the direction you would like to move.
-  - Valid directions are n ,ne ,e ,se ,s ,sw ,w ,nw.
-- `api.doubleStep()`
-  - Will click the double step button once.
-- `api.equip(itemID)`
-  - itemID is the id of the item you would like to equip.
-  - This lets you equip anything.
-- `api.unEquip()`
-  - Unequips the current item.
-- `api.getLastEventInLog()`
-  - Returns a string of the most recent event in your log.
-- `api.getFullEventLog()`
-  - Returns a list of every message in the event log.
-- `api.getSuppliesList()`
-  - Returns a list of each itemID you currently have.
-  - this doesnt give any information about the items other than the ID.
-- `api.getSuppliesData`
-  - Returns a dictionary of each item you currently have.
-  - This does include data such as ammount, equip data, crafting recipee, etc.
--  `api.craft(ID)`
-   - This will craft an item from it's ID.
-   - You can only craft one item a second due to game limits.
-- `api.getCurrentCrafting()`
-  - Returns a dictionary of your crafting queue.
-- `api.pressEventButton(text)`
-  - text is the buttons text you would like to click.
-- `api.getEventName()`
-  - Returns the current event title as a string.
-- `api.getLootingName()`
-  - Returns the current looting title as a string.
-- `api.getLootingDescription()`
-  - Returns the current looting menu description as a string.
-- `api.getLootablesAsData()`
-  - Returns every item you can loot as a dictionary with data.
-- `api.getLootablesAsList()`
-  - Returns every item to loot as a list.
-- `api.takeAll()`
-  - Will take all lootables.
-- `api.takeItem(ID, amount)`
-  - ID is the itemID you wish to take.
-  - Amount is the amount you wish to take.
-- `api.giveItem(ID, amount)`
-  - ID is the itemID you wish to give.
-  - Amount is the amount you wish to give.
-- `api.openDropping()`
-  - Opens the dropping items menu.
-- `api.getUsername()`
-  - Returns your username.
-- `api.getLevel()`
-  - Returns your current level.
-- `api.getMaxWeight()`
-  - Returns your current max weight.
-- `api.getMaxHealth()`
-  - Returns your current max health.
-- `api.getMaxStamina()`
-  - Returns your current max stamina.
-- `api.getMinute()`
-  - Returns the current minute.
-- `api.getHour()`
-  - Returns the current hour.
-- `api.getAmPm()`
-  - Returns if it is a.m. or p.m. as a string.
-- `api.getDay()`
-  - Returns the current day.
-- `api.getSeason()`
-  - Returns the current season.
-- `api.getYear()`
-  - Returns the current year.
-- `api.getCycleTime()`
-  - Returns the current time till next cycle.
-  - Ex. 
-  ```python
-  >>> print(api.getCycleTime())
-  .5
-  ```
-- `api.getBiome()`
-  - Returns your current biome.
-- `api.getPos()`
-  - Returns you position as a list [x,y].
-- `api.deriveTile(x,y)`
-  - Returns the tile at the coordinates.
-  - Only shows client side generation.
-- `api.getTileMap()`
-  - Returns a list with each tile in view distance.
-- `api.getLocalTile(x,y)`
-  - Top left is 1,1 and bottom right is 31,31.
-  - Returns a tile within view distance.
-  - Can show server side locations.
-- `api.getRelTile(x,y)`
-  - Returns a tile relative to you.
-  - Ex.
-  ```python
-  >>> api.getRelTile(0,-1)
-  (tile above you)
-  ```
-- `api.isNewCycle()`
-  - When run repeaditely it will return true when it is a new cycle.
-  - Ex.
-  ```python
-  from time import sleep
-  while True:
-    if api.isNewCycle():
-      code to be run every cycle
-    sleep(.01)
-  ```
-- `api.executeRawJS(js)`
-  - Executes raw java script so if my API missed something you can use javascript.
-- `api.returnJS(js)`
-  - Same as executeRawJS except it can use return values.
-  - Ex. 
-  ```python
-  >>> print(api.returnJS('YOU.username')
-  (your username)
-  ```
-- `api.sendPacket(packet)`
-  - Sends a packet to the server.
+  ### methods
+  - `api.stop()`
+    - This will close all browsing context from firefox and delete your account token. Always use this to stop your bot.
+  - `api.move(dir)`
+    - dir is the direction you would like to move.
+    - Valid directions are n, ne, e, se, s, sw, w, nw.
+  - `api.doubleStep()`
+    - Will click the double step button once.
+  - `api.equip(itemID)`
+    - itemID is the id of the item you would like to equip.
+    - This lets you equip anything.
+  - `api.unEquip()`
+    - Unequips the current item.
+  - `api.getLastEventInLog()`
+    - Returns a string of the most recent event in your log.
+  - `api.getFullEventLog()`
+    - Returns a list of every message in the event log.
+  - `api.getSuppliesList()`
+    - Returns a list of each itemID you currently have.
+    - this doesnt give any information about the items other than the ID.
+  - `api.getSuppliesData`
+    - Returns a dictionary of each item you currently have.
+    - This does include data such as ammount, equip data, crafting recipee, etc.
+  -  `api.craft(ID)`
+     - This will craft an item from it's ID.
+     - You can only craft one item a second due to game limits.
+  - `api.getCurrentCrafting()`
+    - Returns a dictionary of your crafting queue.
+  - `api.pressEventButton(text)`
+    - text is the buttons text you would like to click.
+  - `api.getEventName()`
+    - Returns the current event title as a string.
+  - `api.getLootingName()`
+    - Returns the current looting title as a string.
+  - `api.getLootingDescription()`
+    - Returns the current looting menu description as a string.
+  - `api.getLootablesAsData()`
+    - Returns every item you can loot as a dictionary with data.
+  - `api.getLootablesAsList()`
+    - Returns every item to loot as a list.
+  - `api.takeAll()`
+    - Will take all lootables.
+  - `api.takeItem(ID, amount)`
+    - ID is the itemID you wish to take.
+    - Amount is the amount you wish to take.
+  - `api.giveItem(ID, amount)`
+    - ID is the itemID you wish to give.
+    - Amount is the amount you wish to give.
+  - `api.openDropping()`
+    - Opens the dropping items menu.
+  - `api.getUsername()`
+    - Returns your username.
+  - `api.getLevel()`
+    - Returns your current level.
+  - `api.getMaxWeight()`
+    - Returns your current max weight.
+  - `api.getMaxHealth()`
+    - Returns your current max health.
+  - `api.getMaxStamina()`
+    - Returns your current max stamina.
+  - `api.getMinute()`
+    - Returns the current minute.
+  - `api.getHour()`
+    - Returns the current hour.
+  - `api.getAmPm()`
+    - Returns if it is a.m. or p.m. as a string.
+  - `api.getDay()`
+    - Returns the current day.
+  - `api.getSeason()`
+    - Returns the current season.
+  - `api.getYear()`
+    - Returns the current year.
+  - `api.getCycleTime()`
+    - Returns the current time till next cycle.
+    - Ex. 
+    ```python
+    >>> print(api.getCycleTime())
+    .5
+    ```
+  - `api.getBiome()`
+    - Returns your current biome.
+  - `api.getPos()`
+    - Returns you position as a list [x,y].
+  - `api.deriveTile(x,y)`
+    - Returns the tile at the coordinates.
+    - Only shows client side generation.
+  - `api.getTileMap()`
+    - Returns a list with each tile in view distance.
+  - `api.getLocalTile(x,y)`
+    - Top left is 1,1 and bottom right is 31,31.
+    - Returns a tile within view distance.
+    - Can show server side locations.
+  - `api.getRelTile(x,y)`
+    - Returns a tile relative to you.
+    - Ex.
+    ```python
+    >>> api.getRelTile(0,-1)
+    (tile above you)
+    ```
+  - `api.isNewCycle()`
+    - When run repeaditely it will return true when it is a new cycle.
+    - Ex.
+    ```python
+    from time import sleep
+    while True:
+      if api.isNewCycle():
+        code to be run every cycle
+      sleep(.01)
+    ```
+  - `api.executeRawJS(js)`
+    - Executes raw java script so if my API missed something you can use javascript.
+  - `api.returnJS(js)`
+    - Same as executeRawJS except it can use return values.
+    - Ex. 
+    ```python
+    >>> print(api.returnJS('YOU.username')
+    (your username)
+    ```
+  - `api.sendPacket(packet)`
+    - Sends a packet to the server.
