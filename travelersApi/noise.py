@@ -1,6 +1,6 @@
 """
 The noise that thetravelers.online uses.
-The original implimintation was done in java script by Joseph Gentle
+The original implementation was done in java script by Joseph Gentle
 Original liscensing still applies
 ==================================
 https://github.com/josephg/noisejs

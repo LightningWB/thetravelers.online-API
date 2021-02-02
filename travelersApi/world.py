@@ -56,7 +56,7 @@ def deriveTile(x:int, y:int):
 			pass# in the original it sets it back to sand which is a waste because nomatter what it is sand
 		else:
 			if giganticPerl > 0.99788:
-				if getPerlin(x, y, s=11) < -0.85:
+				if getPerlin(y, x, s=11) < -0.85:
 					bottomTile = TILES['tree']
 				else:
 					bottomTile = TILES['island']
